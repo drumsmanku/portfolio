@@ -1,9 +1,17 @@
 import { PageInfo } from '../typings';
+import {groq} from 'next-sanity';
+import { sanityClient } from '../sanity';
+
 
 export const fetchpageInfo = async() =>{
-  const res= await fetch(`http://localhost:3000/api/getpageInfo`);
-  const data=await res.json();
-  const pageInfo:PageInfo=data.pageInfo;
+  const query=groq`
+ *[_type == "pageInfo"][0]
+
+`;
+
+  const res= await sanityClient.fetch(query);
+  // const data=await res?.json();
+  const pageInfo:PageInfo=res;
 
   return pageInfo;
 }

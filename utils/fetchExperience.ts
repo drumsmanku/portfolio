@@ -1,9 +1,20 @@
 import { WExperience} from '../typings';
+import {groq} from 'next-sanity';
+import { sanityClient } from '../sanity';
+
+
 
 export const fetchExperience = async()=>{
-  const res= await fetch(`http://localhost:3000/api/getExperience`);
-  const data=await res.json();
-  const experiences:WExperience[]=data.experiences;
+  const query=groq`
+ *[_type=="experience"]{
+   ...,
+   technologies[]->
+ }
+
+`;
+  const res= await sanityClient.fetch(query);
+
+  const experiences:WExperience[]=res;
 
   return experiences;
 }

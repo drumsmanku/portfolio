@@ -1,9 +1,20 @@
 import { Projects } from '../typings';
+import {groq} from 'next-sanity';
+import { sanityClient } from '../sanity';
+
 
 export const fetchProjects= async()=>{
-  const res = await fetch(`http://localhost:3000/api/getProjects`);
-  const data = await res.json();
-  const projects:Projects[]=data.projects;
+  const query=groq`
+   *[_type=="project"]{
+   ...,
+     technologies[]->
+  }
+
+`;
+
+  const res = await sanityClient.fetch(query);
+  // const data = await res?.json();
+  const projects:Projects[]=res;
 
   return projects;
 }

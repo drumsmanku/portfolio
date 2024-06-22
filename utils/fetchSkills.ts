@@ -1,10 +1,19 @@
 import { Skill } from '../typings';
+import {groq} from 'next-sanity';
+import { sanityClient } from '../sanity';
+
+
 
 export const fetchSkills = async()=>{
-  const res= await fetch(`http://localhost:3000/api/getSkills`);
+  const query=groq`
+   *[_type=="skill"]
 
-  const data=await res.json();
-  const skills:Skill[]=data.skills;
+`;
+
+  const res= await sanityClient.fetch(query);
+
+  // const data=await res?.json();
+  const skills:Skill[]=res;
 
   return skills;
 }
